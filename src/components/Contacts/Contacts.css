@@ -1,0 +1,13 @@
+#filled-basic {
+    width: 60vw;
+}
+
+.contacts {
+    width: 60vw;
+    padding: 10px 12px;
+    min-height: 60vh;
+    background: linear-gradient(95deg, #ffac27, #ffc77a, #ffe374);
+}
+.search-failed {
+    text-align: center;
+}

@@ -1,0 +1,40 @@
+.user-single {
+  display: grid;
+  grid-template-columns: 1fr 10fr;
+  background: rgba(0, 0, 0, 0.36);
+  height: 3em;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: 0.25s;
+}
+.user-icon {
+  display: grid;
+  justify-self: center;
+  align-self: center;
+}
+
+.user-data {
+  align-self: center;
+  color: #e2e2e2;
+}
+
+.user-data > p {
+  cursor: pointer;
+}
+
+.user-phone {
+  color: inherit;
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+/*Hover*/
+
+.user-single:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.user-phone:hover {
+  margin-left: 15px;
+  color: #171717;
+}
