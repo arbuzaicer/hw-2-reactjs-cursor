@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import { withStyles } from "@material-ui/core/styles";
-import { green } from "@material-ui/core/colors";
-import Favorite from "@material-ui/icons/Favorite";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import FormGroup from "@material-ui/core/FormGroup";
+import { AiOutlineMan } from "react-icons/all";
+import { AiOutlineWoman } from "react-icons/all";
+import { FaRegQuestionCircle } from "react-icons/all";
 import contactsData from "../../data/contactsData";
+import Checkboxes from "../Checkboxes/Checkboxes";
 import Contact from "../Contact/Contact";
 import "./Contacts.css";
 
@@ -16,9 +13,9 @@ class Contacts extends Component {
     contacts: contactsData,
     searchValue: "",
     filteredContacts: contactsData,
-    checkedW: false,
-    checkedM: false,
-    checkedIt: false,
+    checkedW: true,
+    checkedM: true,
+    checkedIt: true,
   };
 
   inputChangeHandler = (e) => {
@@ -37,47 +34,58 @@ class Contacts extends Component {
   };
 
   handleChange = (event) => {
-    this.setState({
-      ...this.state,
-      [event.target.name]: event.target.checked,
-    });
+    this.genderFilterHandler();
+    this.setState(
+      {
+        ...this.state,
+        [event.target.name]: event.target.checked,
+      },
+      this.genderFilterHandler
+    );
   };
-//TODO: доделать чертову сортировку по полу
+
   genderFilterHandler = () => {
     const contactsCopy = [...this.state.contacts];
-    const manGender = this.state.checkedM;
-    const womenGender = this.state.checkedW;
-    const itGender = this.state.checkedIt;
-    console.log(manGender, womenGender, itGender)
-    const mans = contactsCopy.filter((item) => {
-      return manGender && item.gender === "male";
+    let tempArr = [];
+    if (this.state.checkedM) {
+      tempArr = [
+        ...tempArr,
+        contactsCopy.filter((item) => item.gender === "male"),
+      ];
+    }
+    if (this.state.checkedW) {
+      tempArr = [
+        ...tempArr,
+        contactsCopy.filter((item) => item.gender === "female"),
+      ];
+    }
+    if (this.state.checkedIt) {
+      tempArr = [
+        ...tempArr,
+        contactsCopy.filter((item) => item.gender === undefined),
+      ];
+    }
+    this.setState({
+      filteredContacts: tempArr.flatMap((item) => item),
     });
-    const women = contactsCopy.filter((item) => {
-      return womenGender && item.gender === "female";
-    });
-    const it = contactsCopy.filter((item) => {
-      return itGender && item.gender === undefined;
-    });
-    const result = [...mans, ...women, ...it];
-    console.log(result)
-    return result;
   };
 
   render() {
-    this.genderFilterHandler(); //тест результатов фильтрации - тут все работает
-    const GreenCheckbox = withStyles({
-      root: {
-        color: green[400],
-        "&$checked": {
-          color: green[600],
-        },
-      },
-      checked: {},
-    })((props) => <Checkbox color="default" {...props} />);
-
     const contacts = this.state.filteredContacts.map((contact, index) => {
       const telRef = `tel:${contact.phone}`;
-      return <Contact key={index} {...contact} telRef={telRef} />;
+      const manIcon = <AiOutlineMan />;
+      const womenIcon = <AiOutlineWoman />;
+      const itIcon = <FaRegQuestionCircle />;
+      return (
+        <Contact
+          manIcon={manIcon}
+          womenIcon={womenIcon}
+          itIcon={itIcon}
+          key={index}
+          {...contact}
+          telRef={telRef}
+        />
+      );
     });
 
     return (
@@ -88,44 +96,14 @@ class Contacts extends Component {
           label="Введите данные для поиска"
           variant="filled"
         />
-        <div className="checkbox-section">
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.checkedM}
-                  onChange={this.handleChange}
-                  name="checkedM"
-                  color="primary"
-                />
-              }
-              label="М"
-            />
-
-            <FormControlLabel
-              control={
-                <GreenCheckbox
-                  checked={this.state.checkedIt}
-                  onChange={this.handleChange}
-                  name="checkedIt"
-                />
-              }
-              label="Не указан"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite />}
-                  checked={this.state.checkedW}
-                  onChange={this.handleChange}
-                  name="checkedW"
-                />
-              }
-              label="Ж"
-            />
-          </FormGroup>
-        </div>
+        {
+          <Checkboxes
+            checkedM={this.state.checkedM}
+            checkedW={this.state.checkedW}
+            checkedIt={this.state.checkedIt}
+            handleChange={this.handleChange}
+          />
+        }
 
         <div className="contacts">
           {this.state.filteredContacts.length ? (
