@@ -33,16 +33,13 @@ class Contacts extends Component {
     });
   };
 
-  handleChange = (event) => {
-    this.genderFilterHandler();
+  handleChange = (event) =>
     this.setState(
       {
-        ...this.state,
         [event.target.name]: event.target.checked,
       },
       this.genderFilterHandler
     );
-  };
 
   genderFilterHandler = () => {
     const contactsCopy = [...this.state.contacts];

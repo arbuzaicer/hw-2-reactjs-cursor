@@ -1,6 +1,6 @@
 import React from "react";
-import "./Contact.css";
 import Avatar from "@material-ui/core/Avatar";
+import "./Contact.css";
 
 const Contact = ({
   firstName,
